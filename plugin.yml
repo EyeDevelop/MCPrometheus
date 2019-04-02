@@ -1,0 +1,30 @@
+# General purpose information.
+name: Prometheus
+version: 1.0.0
+main: org.rootedinc.prometheus.Prometheus
+
+description: A friendly plugin to perform fun tasks.
+author: EyeDevelop
+
+
+# Registers the commands in use by SubPrometheus.
+commands:
+
+  prometheus:
+    description: The main command for interacting with the plugin.
+    aliases: [pth]
+    permission: prometheus.usage
+
+
+# Arranges permissions to limit usage.
+permissions:
+
+  prometheus.*:
+    description: Gives permission to use all of Prometheus.
+    default: op
+    children:
+      prometheus.yeet: false
+
+  prometheus.yeet:
+    description: Gives permission to use Prometheus Yeet.
+    default: true
