@@ -15,9 +15,11 @@ public abstract class SubCommand implements ISubCommand {
     private String usage;
 
     /**
-     * @param name The subcommand name.
+     * Constructor for the custom SubCommand.
+     *
+     * @param name             The subcommand name.
      * @param shortDescription A short description of what this subcommand does.
-     * @param usage The correct usage for this command.
+     * @param usage            The correct usage for this command.
      */
     public SubCommand(String name, String shortDescription, String usage) {
         this.name = name;
@@ -26,21 +28,8 @@ public abstract class SubCommand implements ISubCommand {
     }
 
     /**
-     * @param name The subcommand name.
-     * @param shortDescription A short description of what this subcommand does.
-     * @param commandParent The parent command to which this subcommand (soon) belongs.
-     * @param usage The correct usage for this command.
-     */
-    public SubCommand(String name, String shortDescription, String usage, ICommandEx commandParent) {
-        this.name = name;
-        this.shortDescription = shortDescription;
-        this.usage = usage;
-
-        // Register command.
-        commandParent.registerSubCommand(this.name, this);
-    }
-
-    /**
+     * Function to retrieve the commands short description.
+     *
      * @return The short description.
      */
     public String getShortDescription() {
@@ -48,6 +37,8 @@ public abstract class SubCommand implements ISubCommand {
     }
 
     /**
+     * Function to retrieve the name of the subcommand.
+     *
      * @return The subcommand name.
      */
     public String getName() {
@@ -55,6 +46,8 @@ public abstract class SubCommand implements ISubCommand {
     }
 
     /**
+     * Function to retrieve the subcommands usage.
+     *
      * @return The subcommands usage.
      */
     public String getUsage() {
@@ -62,15 +55,19 @@ public abstract class SubCommand implements ISubCommand {
     }
 
     /**
+     * Actual code executed when the SubCommand is called.
+     *
      * @param commandSender The initiator of the command.
-     * @param command The command object.
-     * @param cmdLabel Exactly what the player typed.
-     * @param subArgs The arguments given to the subcommand.
+     * @param command       The command object.
+     * @param cmdLabel      Exactly what the player typed.
+     * @param subArgs       The arguments given to the subcommand.
      */
     @Override
     public abstract void run(CommandSender commandSender, Command command, String cmdLabel, String[] subArgs);
 
     /**
+     * Function for displaying information of this subcommand.
+     *
      * @param commandSender The initiator of the command.
      */
     @Override

@@ -7,10 +7,13 @@ import org.bukkit.command.CommandSender;
 public interface ICommandEx extends CommandExecutor {
 
     void registerSubCommand(String name, ISubCommand subCommand);
-    void mainCommand(CommandSender commandSender, Command command, String cmdLabel, String[] cmdArgs);
-    void displayHelp(CommandSender commandSender, String cmdLabel);
 
-    
+    void mainCommand(CommandSender commandSender, Command command, String cmdLabel, String[] cmdArgs);
+
+    void displayHelp(CommandSender commandSender, String cmdLabel, int pageID);
+
+    String getCommandName();
+
     @Override
     boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings);
 }

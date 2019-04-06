@@ -3,9 +3,9 @@ package org.rootedinc.prometheus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.rootedinc.prometheus.commands.CmdPrometheus;
+import org.rootedinc.prometheus.interfaces.command.CommandManager;
+import org.rootedinc.prometheus.interfaces.listeners.ListenerManager;
 
-import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -13,7 +13,7 @@ import java.util.logging.Level;
  */
 public class Prometheus extends JavaPlugin {
 
-    private static Prometheus instance;
+    public static Prometheus instance;
     private static String pluginPrefix = (
             ChatColor.WHITE +
                     "[" +
@@ -24,8 +24,8 @@ public class Prometheus extends JavaPlugin {
                     ChatColor.WHITE +
                     "]"
     );
-    private static String consolePrefix = "[Prometheus]";
-    private LstnPrometheus listenerManager = new LstnPrometheus(this);
+    private ListenerManager listenerManager = new LstnMgrPrometheus(this);
+    private CommandManager commandManager = new CmdMgrPrometheus(this);
 
     /**
      * The class constructor where the instance variable is set.
@@ -39,8 +39,10 @@ public class Prometheus extends JavaPlugin {
      * @param logLevel The Java Logger loglevel.
      * @param message  The message to log to console.
      */
-    private static void Log(Level logLevel, String message) {
+    public static void Log(Level logLevel, String message) {
         // Log the message to the Bukkit console.
+        String consolePrefix = "[Prometheus]";
+
         Bukkit.getLogger().log(logLevel, consolePrefix + " " + message);
     }
 
@@ -50,13 +52,6 @@ public class Prometheus extends JavaPlugin {
      */
     public static String prefixifyMsg(String message) {
         return pluginPrefix + " " + message;
-    }
-
-    /**
-     * @return An instance of this plugin.
-     */
-    public static Prometheus getPluginInstance() {
-        return instance;
     }
 
     /**
@@ -88,8 +83,8 @@ public class Prometheus extends JavaPlugin {
         // Notify the user the plugin is live.
         Log(Level.INFO, "Plugin is up and running!");
 
-        // Register the main command.
-        Objects.requireNonNull(getCommand("prometheus")).setExecutor(new CmdPrometheus());
+        // Register the commands.
+        commandManager.bukkitRegister();
         Log(Level.FINE, "Registered commands.");
 
         // Register the listeners.

@@ -1,12 +1,13 @@
 package org.rootedinc.prometheus.commands.SubPrometheus;
 
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.rootedinc.prometheus.interfaces.command.ICommandEx;
 import org.rootedinc.prometheus.interfaces.command.SubCommand;
-import org.rootedinc.prometheus.listeners.PlayerListener;
+import org.rootedinc.prometheus.listeners.EntityListener;
 
 import static org.rootedinc.prometheus.Prometheus.prefixifyMsg;
 
@@ -14,17 +15,17 @@ import static org.rootedinc.prometheus.Prometheus.prefixifyMsg;
  * The definition for /prometheus yeet.
  */
 public class SubYeet extends SubCommand {
+
     /**
-     * @param name The subcommand name.
-     * @param shortDescription A short description of what this subcommand does.
-     * @param usage The correct usage for this command.
-     * @param commandParent The parent command.
+     * Constructor for the SubYeet SubCommand.
      */
-    public SubYeet(String name, String shortDescription, String usage, ICommandEx commandParent) {
-        super(name, shortDescription, usage, commandParent);
+    public SubYeet() {
+        super("yeet", "Makes stuff fly around.", "/prometheus yeet <on/off/forward height side>");
     }
 
     /**
+     * Actual code being executed.
+     *
      * @param commandSender The initiator of the command.
      * @param command       The command object.
      * @param cmdLabel      Exactly what the player typed.
@@ -66,26 +67,29 @@ public class SubYeet extends SubCommand {
 
             // Values are usable now.
             // Store them in the appropriate HashMap.
-            p.sendMessage(prefixifyMsg(String.format("Yeeting is now enabled with (%f, %f, %f).", x, y ,z)));
-            PlayerListener.playerYeet.put(p.getUniqueId(), new Vector(x, y, z));
-        }
-
-        else if (subArgs.length >= 1) {
+            p.sendMessage(prefixifyMsg(String.format("Yeeting is now enabled with (%f, %f, %f).", x, y, z)));
+            EntityListener.playerYeet.put(p.getUniqueId(), new Vector(x, y, z));
+        } else if (subArgs.length >= 1) {
             // Check if the user wants to enable or disable yeeting.
             boolean enableYeet = subArgs[0].equalsIgnoreCase("on");
             if (!enableYeet) {
                 // Disable yeeting.
                 p.sendMessage(prefixifyMsg("Yeeting is now disabled."));
-                PlayerListener.playerYeet.put(p.getUniqueId(), new Vector());
+                EntityListener.playerYeet.remove(p.getUniqueId());
                 return;
             }
 
             // Enable yeeting.
             p.sendMessage(prefixifyMsg("Yeeting is now enabled."));
-            PlayerListener.playerYeet.put(p.getUniqueId(), new Vector(0d, 2d, 0d));
-        }
 
-        else {
+            // Give the player a yeeting stick.
+            ItemStack yeetStick = new ItemStack(Material.STICK, 1);
+            yeetStick.getItemMeta().setDisplayName("Yeeter");
+            p.getInventory().addItem(yeetStick);
+
+            // Add the player to the yeet list.
+            EntityListener.playerYeet.put(p.getUniqueId(), new Vector(0d, 2d, 0d));
+        } else {
             displayHelp(commandSender);
         }
     }

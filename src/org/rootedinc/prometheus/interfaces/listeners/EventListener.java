@@ -16,13 +16,14 @@ public abstract class EventListener implements IEventListener {
 
 
     /**
-     * @param listenerManager The ListenerManager of the Plugin where this listener is about to be registered.
+     * Constructor for the custom Event handler.
      */
-    public EventListener(IListenerManager listenerManager) {
-        listenerManager.registerListener(this);
+    public EventListener() {
     }
 
     /**
+     * Constructor for the custom Event handler, but advanced and more fine-tunable.
+     *
      * @param eventType       The type of event. I.e. PlayerJoinEvent.
      * @param eventPriority   The priority of the event.
      * @param eventExecutor   The actual executor of this event.
@@ -38,6 +39,8 @@ public abstract class EventListener implements IEventListener {
     }
 
     /**
+     * Function to retrieve event type.
+     *
      * @return This event's type.
      */
     @Override
@@ -46,6 +49,8 @@ public abstract class EventListener implements IEventListener {
     }
 
     /**
+     * Function to retrieve event priority.
+     *
      * @return This event's priority.
      */
     @Override
@@ -54,6 +59,8 @@ public abstract class EventListener implements IEventListener {
     }
 
     /**
+     * Function to retrieve the event executor.
+     *
      * @return This event's executor.
      */
     @Override
@@ -65,9 +72,12 @@ public abstract class EventListener implements IEventListener {
      * Function to be ran when the plugin is reloaded.
      */
     @Override
-    public abstract void onReload();
+    public void onReload() {
+    }
 
     /**
+     * Retrieves whether the event is configured in an advanced manner.
+     *
      * @return Whether this event is advanced (custom type, priority, etc.)
      */
     @Override

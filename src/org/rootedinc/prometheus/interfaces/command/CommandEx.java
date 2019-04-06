@@ -16,7 +16,21 @@ public abstract class CommandEx implements ICommandEx {
     // Keep track of the subcommand names and how to execute them.
     private HashMap<String, ISubCommand> subCommands = new HashMap<>();
 
+    // Keep track of some required data.
+    private String commandName;
+
     /**
+     * Constructor to satisfy data.
+     *
+     * @param commandName The name of this command.
+     */
+    public CommandEx(String commandName) {
+        this.commandName = commandName;
+    }
+
+    /**
+     * Function to register a subcommand.
+     *
      * @param name       The name of the subcommand.
      * @param subCommand The subcommand object itself.
      */
@@ -27,6 +41,8 @@ public abstract class CommandEx implements ICommandEx {
     }
 
     /**
+     * The main method called when the command is executed without parameters.
+     *
      * @param commandSender The initiator of the command.
      * @param command       The command object.
      * @param cmdLabel      The command as the player typed.
@@ -36,24 +52,47 @@ public abstract class CommandEx implements ICommandEx {
     public abstract void mainCommand(CommandSender commandSender, Command command, String cmdLabel, String[] cmdArgs);
 
     /**
+     * A simple function for printing help to a player.
+     *
      * @param commandSender The initiator of the command.
      * @param cmdLabel      The command as the player typed.
      */
     @Override
-    public void displayHelp(CommandSender commandSender, String cmdLabel) {
+    public void displayHelp(CommandSender commandSender, String cmdLabel, int pageID) {
         // Let user know which command we're sending help for.
+        int numPages = (int) Math.floor(subCommands.size() / 5) + 1;
+
+        // There is a maximum.
+        if (pageID > numPages)
+            pageID = numPages;
+
+        // There is also a minimum.
+        if (pageID < 2)
+            pageID = 1;
+
+        // Notify user.
         commandSender.sendMessage(prefixifyMsg("Help for " + cmdLabel));
+        commandSender.sendMessage(prefixifyMsg(String.format("Page %d of %d", pageID, numPages)));
+
+        // Make a list of keys.
+        Object[] subCommandValues = subCommands.values().toArray();
 
         // Show all the subcommands and their short description.
-        for (ISubCommand subCommand : subCommands.values()) {
+        for (int i = (pageID - 1) * 5; i < Math.min(pageID * 5, subCommands.size()); i++) {
+            // Get the subcommand.
+            ISubCommand subCommand = (ISubCommand) subCommandValues[i];
+
+            // Print the help.
             String helpMessage = subCommand.getName() + ": " + subCommand.getUsage();
-            helpMessage += "\n  " + subCommand.getShortDescription();
+            helpMessage += "\n      " + subCommand.getShortDescription();
 
             commandSender.sendMessage(helpMessage);
         }
     }
 
     /**
+     * The actual onCommand() that is called by Bukkit.
+     *
      * @param commandSender The initiator of the command.
      * @param command       The command object.
      * @param cmdLabel      The command as the player typed.
@@ -78,40 +117,61 @@ public abstract class CommandEx implements ICommandEx {
                 // Help called.
                 // Display help.
 
+                // Create an empty variable.
+                int pageID = 1;
+                ISubCommand hlpSubCommand = null;
+
+                // Help is called for a subcommand or page number.
                 if (cmdArgs.length >= 2) {
-                    // Help is called for a subcommand.
-                    // Find that subcommand.
-                    String hlpSubCommandName = cmdArgs[1];
-                    ISubCommand hlpSubCommand = subCommands.get(hlpSubCommandName);
-
-                    // Only run that help if the subcommand is found, otherwise run the main help.
-                    if (hlpSubCommand != null) {
-                        hlpSubCommand.displayHelp(commandSender);
-
-                        return true;
+                    try {
+                        // Try to get a page number from user.
+                        pageID = Integer.parseInt(cmdArgs[1]);
+                    } catch (NumberFormatException e) {
+                        // Help is called for a subcommand.
+                        hlpSubCommand = subCommands.get(cmdArgs[1]);
                     }
                 }
+
+                // Check if subcommand help is requested.
+                if (hlpSubCommand != null) {
+                    hlpSubCommand.displayHelp(commandSender);
+
+                    return true;
+                }
+
+                // Default to displaying main help.
+                displayHelp(commandSender, cmdLabel, pageID);
+
+                return true;
             } else {
-                // Subcommand was found.
                 // Run the subcommand code.
 
                 // Check if the subcommand is registered.
-                if (subCommand == null) {
-                    return false;
+                if (subCommand != null) {
+
+                    // Only pass the sub arguments.
+                    String[] subArgs = Arrays.copyOfRange(cmdArgs, 1, cmdArgs.length);
+                    subCommand.run(commandSender, command, cmdLabel, subArgs);
+
+                    return true;
                 }
-
-                // Only pass the sub arguments.
-                String[] subArgs = Arrays.copyOfRange(cmdArgs, 1, cmdArgs.length);
-                subCommand.run(commandSender, command, cmdLabel, subArgs);
-
-                return true;
             }
         }
 
         // Display help because subcommand hasn't run properly.
-        displayHelp(commandSender, cmdLabel);
+        commandSender.sendMessage(prefixifyMsg("Subcommand not found, please run help."));
 
         // Don't display the usage of the command.
-        return true;
+        return false;
+    }
+
+    /**
+     * Getter for commandName.
+     *
+     * @return The name of this command.
+     */
+    @Override
+    public String getCommandName() {
+        return commandName;
     }
 }

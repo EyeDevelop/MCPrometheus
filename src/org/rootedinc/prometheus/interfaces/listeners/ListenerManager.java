@@ -15,6 +15,8 @@ public abstract class ListenerManager implements IListenerManager {
     private List<IEventListener> listeners = new ArrayList<>();  // Keep track of actual listeners.
 
     /**
+     * Constructor for the ListenManager.
+     *
      * @param pluginParent The JavaPlugin parent for this ListenerManager.
      */
     public ListenerManager(JavaPlugin pluginParent) {
@@ -22,6 +24,8 @@ public abstract class ListenerManager implements IListenerManager {
     }
 
     /**
+     * Function to register listener.
+     *
      * @param listener The listener to be registered.
      */
     @Override
