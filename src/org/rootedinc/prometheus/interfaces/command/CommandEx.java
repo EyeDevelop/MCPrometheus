@@ -28,35 +28,15 @@ public abstract class CommandEx implements ICommandEx {
         this.commandName = commandName;
     }
 
-    /**
-     * Function to register a subcommand.
-     *
-     * @param name       The name of the subcommand.
-     * @param subCommand The subcommand object itself.
-     */
     @Override
     public void registerSubCommand(String name, ISubCommand subCommand) {
         // Add the subcommand to the HashMap.
         subCommands.put(name, subCommand);
     }
 
-    /**
-     * The main method called when the command is executed without parameters.
-     *
-     * @param commandSender The initiator of the command.
-     * @param command       The command object.
-     * @param cmdLabel      The command as the player typed.
-     * @param cmdArgs       The arguments passed to the command.
-     */
     @Override
     public abstract void mainCommand(CommandSender commandSender, Command command, String cmdLabel, String[] cmdArgs);
 
-    /**
-     * A simple function for printing help to a player.
-     *
-     * @param commandSender The initiator of the command.
-     * @param cmdLabel      The command as the player typed.
-     */
     @Override
     public void displayHelp(CommandSender commandSender, String cmdLabel, int pageID) {
         // Let user know which command we're sending help for.
@@ -90,15 +70,11 @@ public abstract class CommandEx implements ICommandEx {
         }
     }
 
-    /**
-     * The actual onCommand() that is called by Bukkit.
-     *
-     * @param commandSender The initiator of the command.
-     * @param command       The command object.
-     * @param cmdLabel      The command as the player typed.
-     * @param cmdArgs       The arguments passed to the command.
-     * @return Whether to show the usage to the player. (false = yes, true = no).
-     */
+    @Override
+    public String getCommandName() {
+        return commandName;
+    }
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String cmdLabel, String[] cmdArgs) {
         // If the main command is executed, run the main command.
@@ -163,15 +139,5 @@ public abstract class CommandEx implements ICommandEx {
 
         // Don't display the usage of the command.
         return false;
-    }
-
-    /**
-     * Getter for commandName.
-     *
-     * @return The name of this command.
-     */
-    @Override
-    public String getCommandName() {
-        return commandName;
     }
 }

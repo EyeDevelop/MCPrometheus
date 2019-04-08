@@ -21,30 +21,16 @@ public class CommandManager implements ICommandManager {
         this.parentPlugin = parentPlugin;
     }
 
-
-    /**
-     * Function to register a command in this manager.
-     *
-     * @param command The command to add.
-     */
     @Override
     public void registerCommand(ICommandEx command) {
         commands.add(command);
     }
 
-    /**
-     * Function to retrieve all commands registered.
-     *
-     * @return
-     */
     @Override
     public List<ICommandEx> getCommands() {
         return commands;
     }
 
-    /**
-     * Function to perform the Bukkit registration.
-     */
     @Override
     public void bukkitRegister() {
         for (ICommandEx command : commands) {

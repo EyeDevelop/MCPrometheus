@@ -38,48 +38,25 @@ public abstract class EventListener implements IEventListener {
         listenerManager.registerListener(this);
     }
 
-    /**
-     * Function to retrieve event type.
-     *
-     * @return This event's type.
-     */
     @Override
     public Class<Event> getEventType() {
         return eventType;
     }
 
-    /**
-     * Function to retrieve event priority.
-     *
-     * @return This event's priority.
-     */
     @Override
     public EventPriority getEventPriority() {
         return eventPriority;
     }
 
-    /**
-     * Function to retrieve the event executor.
-     *
-     * @return This event's executor.
-     */
     @Override
     public EventExecutor getEventExecutor() {
         return eventExecutor;
     }
 
-    /**
-     * Function to be ran when the plugin is reloaded.
-     */
     @Override
     public void onReload() {
     }
 
-    /**
-     * Retrieves whether the event is configured in an advanced manner.
-     *
-     * @return Whether this event is advanced (custom type, priority, etc.)
-     */
     @Override
     public boolean isAdvanced() {
         return isAdvanced;

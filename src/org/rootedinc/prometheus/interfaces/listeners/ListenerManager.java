@@ -23,19 +23,11 @@ public abstract class ListenerManager implements IListenerManager {
         this.pluginInstance = pluginParent;
     }
 
-    /**
-     * Function to register listener.
-     *
-     * @param listener The listener to be registered.
-     */
     @Override
     public void registerListener(IEventListener listener) {
         listeners.add(listener);
     }
 
-    /**
-     * Function that registers all known listeners with Bukkit.
-     */
     @Override
     public void doSimpleBukkitRegister() {
         for (IEventListener l : listeners) {
@@ -47,9 +39,6 @@ public abstract class ListenerManager implements IListenerManager {
         }
     }
 
-    /**
-     * Function that registers all known advanced listeners with Bukkit.
-     */
     @Override
     public void doBukkitRegister() {
         for (IEventListener l : listeners) {
@@ -61,9 +50,6 @@ public abstract class ListenerManager implements IListenerManager {
         }
     }
 
-    /**
-     * Function to be ran when the plugin is reloaded.
-     */
     @Override
     public void onReload() {
         for (IEventListener subListener : listeners) {
