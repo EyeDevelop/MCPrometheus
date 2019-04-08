@@ -46,16 +46,28 @@ public class SignActions {
         }
 
         // Prepare all the Sign actions.
-        SignActionRunnable logicAnd = new LogicAnd();
-        SignActionRunnable logicOr = new LogicOr();
+        SignActionRunnable logicAnd = new LogicAND();
+        SignActionRunnable logicNand = new LogicNAND();
+
+        SignActionRunnable logicOr = new LogicOR();
+        SignActionRunnable logicNor = new LogicNOR();
+
         SignActionRunnable logicXor = new LogicXOR();
+        SignActionRunnable logicXnor = new LogicXNOR();
+
         SignActionRunnable logicNot = new LogicNOT();
         SignActionRunnable bigYeet = new BigYeet();
 
         // Register the Sign actions.
         signCommands.put("[AND]", logicAnd);
+        signCommands.put("[NAND]", logicNand);
+
         signCommands.put("[OR]", logicOr);
+        signCommands.put("[NOR]", logicNor);
+
         signCommands.put("[XOR]", logicXor);
+        signCommands.put("[XNOR]", logicXnor);
+
         signCommands.put("[NOT]", logicNot);
         signCommands.put("BIGYEET", bigYeet);
 
@@ -64,7 +76,7 @@ public class SignActions {
     }
 
     // Define all the Sign Actions.
-    private static class LogicAnd extends SignActionRunnable {
+    private static class LogicAND extends SignActionRunnable {
 
         @Override
         public void run() {
@@ -76,11 +88,35 @@ public class SignActions {
         }
     }
 
-    private static class LogicOr extends SignActionRunnable {
+    private static class LogicNAND extends SignActionRunnable {
+
+        @Override
+        public void run() {
+            if (!(leftPowered && rightPowered)) {
+                backBlock.setType(Material.REDSTONE_BLOCK);
+            } else {
+                backBlock.setType(Material.AIR);
+            }
+        }
+    }
+
+    private static class LogicOR extends SignActionRunnable {
 
         @Override
         public void run() {
             if (leftPowered || rightPowered) {
+                backBlock.setType(Material.REDSTONE_BLOCK);
+            } else {
+                backBlock.setType(Material.AIR);
+            }
+        }
+    }
+
+    private static class LogicNOR extends SignActionRunnable {
+
+        @Override
+        public void run() {
+            if (!(leftPowered || rightPowered)) {
                 backBlock.setType(Material.REDSTONE_BLOCK);
             } else {
                 backBlock.setType(Material.AIR);
@@ -100,6 +136,18 @@ public class SignActions {
         }
     }
 
+    private static class LogicXNOR extends SignActionRunnable {
+
+        @Override
+        public void run() {
+            if (!((leftPowered || rightPowered) && !(leftPowered && rightPowered))) {
+                backBlock.setType(Material.REDSTONE_BLOCK);
+            } else {
+                backBlock.setType(Material.AIR);
+            }
+        }
+    }
+
     private static class LogicNOT extends SignActionRunnable {
 
         @Override
@@ -112,6 +160,7 @@ public class SignActions {
         }
     }
 
+    // WARNING: ABSOLUTELY DO NOT USE WITH CONTINUOUS REDSTONE. THE SERVER WILL DIE!
     private static class BigYeet extends SignActionRunnable {
 
         @Override

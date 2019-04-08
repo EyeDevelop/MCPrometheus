@@ -18,14 +18,14 @@ public abstract class SignActionRunnable implements Runnable {
 
     /**
      * Makes sure the Runnable can use the variables needed for a SignAction.
-     * @param blockLeft Whether the block to the left of the sign is powered.
-     * @param blockRight Whether the block to the right of the sign is powered.
-     * @param blockFront Whether the block in front of the sign is powered.
+     * @param leftPowered Whether the block to the left of the sign is powered.
+     * @param rightPowered Whether the block to the right of the sign is powered.
+     * @param frontPowered Whether the block in front of the sign is powered.
      * @param blockBack The backBlock object.
      */
-    void updateSettings(boolean blockLeft, boolean blockRight, boolean frontPowered, Block blockBack) {
-        this.leftPowered = blockLeft;
-        this.rightPowered = blockRight;
+    void updateSettings(boolean leftPowered, boolean rightPowered, boolean frontPowered, Block blockBack) {
+        this.leftPowered = leftPowered;
+        this.rightPowered = rightPowered;
         this.frontPowered = frontPowered;
         this.backBlock = blockBack;
     }
